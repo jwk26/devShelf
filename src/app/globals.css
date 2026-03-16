@@ -112,4 +112,53 @@
       scroll-behavior: auto !important;
     }
   }
+
+  .hljs {
+    @apply block bg-card text-foreground;
+  }
+
+  .hljs-comment,
+  .hljs-quote {
+    @apply text-muted-foreground;
+  }
+
+  .hljs-keyword,
+  .hljs-selector-tag,
+  .hljs-literal,
+  .hljs-name,
+  .hljs-tag {
+    @apply text-orange-600 dark:text-orange-400;
+  }
+
+  .hljs-string,
+  .hljs-title,
+  .hljs-section,
+  .hljs-attribute,
+  .hljs-addition {
+    @apply text-orange-500;
+  }
+
+  .hljs-number,
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-variable,
+  .hljs-template-tag {
+    @apply text-foreground;
+  }
+
+  .hljs-built_in,
+  .hljs-type,
+  .hljs-class,
+  .hljs-function,
+  .hljs-params {
+    @apply text-orange-700 dark:text-orange-400;
+  }
+
+  .hljs-emphasis {
+    @apply italic;
+  }
+
+  .hljs-strong {
+    @apply font-semibold;
+  }
 }
