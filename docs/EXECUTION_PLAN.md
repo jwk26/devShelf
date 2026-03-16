@@ -82,7 +82,7 @@
 ## Phase 2: Auth
 
 ### Task 6: Login Page + OAuth
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/app/login/page.tsx`, `src/app/login/login-form.tsx`, `src/app/auth/callback/route.ts`
 - **Actions:**
   - Server component checks if logged in (redirects to `/`)
@@ -94,7 +94,7 @@
 - **Commit:** `feat: add login page with Google/GitHub OAuth and callback`
 
 ### Task 7: Settings Page
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/app/settings/page.tsx`, `src/app/settings/settings-form.tsx`, `src/app/actions/profile.ts`
 - **Actions:**
   - Server component loads profile, client form for editing
@@ -104,6 +104,16 @@
   - `updateProfile` server action with Zod validation
 - **Acceptance:** Can update profile fields. Username uniqueness enforced.
 - **Commit:** `feat: add settings page with profile form`
+
+#### Phase 2 Notes
+
+> **Shadcn component preflight:** Before delegating form-heavy phases to Codex, verify all required `src/components/ui/` files exist. Missing components cause Codex to stop and ask. Run `pnpm dlx shadcn@latest add <components>` upfront.
+
+> **Open redirect pattern:** Every `returnUrl` handler must check both `!startsWith('/')` AND `startsWith('//')`. Protocol-relative URLs (`//evil.com`) pass a plain `/` prefix check but redirect externally in browsers. Apply to all login/callback/redirect flows.
+
+> **Codex + missing dependency = early stop:** If Codex finds a constraint contradiction (use X + no extra files, but X doesn't exist), it stops cleanly. Resolve the contradiction, then re-run — Codex picks up the full task correctly on retry.
+
+> **Full issue log:** `docs/issues/Issues_Phase_2.md`
 
 ---
 
