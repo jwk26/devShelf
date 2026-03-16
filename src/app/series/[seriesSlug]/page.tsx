@@ -9,13 +9,13 @@ import { getSeriesBySlug } from '@/lib/queries'
 
 type SeriesPageProps = {
   params: Promise<{
-    slug: string
+    seriesSlug: string
   }>
 }
 
 export async function generateMetadata({ params }: SeriesPageProps): Promise<Metadata> {
-  const { slug } = await params
-  const series = await getSeriesBySlug(slug)
+  const { seriesSlug } = await params
+  const series = await getSeriesBySlug(seriesSlug)
 
   if (!series) {
     return {
@@ -30,8 +30,8 @@ export async function generateMetadata({ params }: SeriesPageProps): Promise<Met
 }
 
 export default async function SeriesPage({ params }: SeriesPageProps) {
-  const { slug } = await params
-  const series = await getSeriesBySlug(slug)
+  const { seriesSlug } = await params
+  const series = await getSeriesBySlug(seriesSlug)
 
   if (!series) {
     notFound()
