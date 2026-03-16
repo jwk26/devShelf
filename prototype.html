@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeShelf — Design Prototype</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet">
+
+  <style>
+    /* ══════════════════════════════════════════════
+       CSS VARIABLES — from DESIGN_TOKENS.md
+       ══════════════════════════════════════════════ */
+    :root {
+      /* Shadcn Core */
+      --background: 55 23% 97%;
+      --foreground: 24 10% 10%;
+      --card: 55 12% 95%;
+      --card-foreground: 24 10% 10%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 24 10% 10%;
+      --primary: 24 10% 10%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 40 6% 96%;
+      --secondary-foreground: 24 10% 10%;
+      --muted: 40 6% 96%;
+      --muted-foreground: 25 5% 45%;
+      --accent: 20 6% 90%;
+      --accent-foreground: 24 10% 10%;
+      --destructive: 0 84% 60%;
+      --destructive-foreground: 0 0% 100%;
+      --border: 20 6% 90%;
+      --input: 20 6% 90%;
+      --ring: 25 95% 53%;
+      --radius: 0.5rem;
+
+      /* Surface Extensions */
+      --background-secondary: 55 20% 96%;
+      --background-sidebar: 50 15% 98%;
+
+      /* Orange Accent Scale */
+      --orange-50: 33 100% 96%;
+      --orange-100: 34 100% 92%;
+      --orange-200: 32 98% 83%;
+      --orange-400: 27 96% 61%;
+      --orange-500: 25 95% 53%;
+      --orange-600: 21 94% 48%;
+      --orange-700: 17 89% 40%;
+      --orange-900: 15 75% 28%;
+
+      /* Layout */
+      --reading-width: 850px;
+      --sidebar-width: 400px;
+      --layout-max: 1920px;
+
+      /* Metadata Typography */
+      --tracking-tightest: 0.1em;
+      --tracking-label: 0.2em;
+      --tracking-mid: 0.3em;
+      --tracking-wide: 0.4em;
+      --tracking-wider: 0.5em;
+      --tracking-widest: 0.6em;
+      --text-meta-xs: 9px;
+      --text-meta-sm: 10px;
+      --text-meta-base: 11px;
+      --text-meta-md: 12px;
+
+      /* Font Wiring */
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .dark {
+      --background: 24 10% 10%;
+      --foreground: 40 6% 98%;
+      --card: 12 5% 15%;
+      --card-foreground: 40 6% 98%;
+      --popover: 12 5% 15%;
+      --popover-foreground: 40 6% 98%;
+      --primary: 40 6% 98%;
+      --primary-foreground: 24 10% 10%;
+      --secondary: 30 7% 25%;
+      --secondary-foreground: 40 6% 98%;
+      --muted: 30 7% 25%;
+      --muted-foreground: 25 5% 64%;
+      --accent: 30 7% 25%;
+      --accent-foreground: 40 6% 98%;
+      --destructive: 0 63% 31%;
+      --destructive-foreground: 40 6% 98%;
+      --border: 30 7% 25%;
+      --input: 30 7% 25%;
+      --ring: 27 96% 61%;
+      --background-secondary: 12 5% 13%;
+      --background-sidebar: 20 5% 12%;
+      --orange-50: 25 6% 18%;
+      --orange-100: 25 10% 20%;
+      --orange-200: 25 20% 25%;
+      --orange-400: 27 96% 61%;
+      --orange-500: 25 95% 53%;
+      --orange-600: 27 96% 61%;
+      --orange-700: 25 95% 53%;
+      --orange-900: 34 100% 92%;
+    }
+
+    /* ══════════════════════════════════════════════
+       BASE STYLES
+       ══════════════════════════════════════════════ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      border-color: hsl(var(--border));
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+
+    ::selection {
+      background: hsl(var(--orange-50));
+      color: hsl(var(--orange-900));
+    }
+
+    [id] { scroll-margin-top: 5rem; }
+
+    /* ══════════════════════════════════════════════
+       UTILITY CLASSES
+       ══════════════════════════════════════════════ */
+    .font-serif { font-family: var(--font-serif); }
+    .font-sans { font-family: var(--font-sans); }
+
+    .bg-background { background: hsl(var(--background)); }
+    .bg-background-secondary { background: hsl(var(--background-secondary)); }
+    .bg-background-sidebar { background: hsl(var(--background-sidebar)); }
+    .bg-card { background: hsl(var(--card)); }
+    .bg-primary { background: hsl(var(--primary)); }
+    .bg-secondary { background: hsl(var(--secondary)); }
+    .bg-muted { background: hsl(var(--muted)); }
+    .bg-accent { background: hsl(var(--accent)); }
+    .bg-destructive { background: hsl(var(--destructive)); }
+    .bg-orange-50 { background: hsl(var(--orange-50)); }
+    .bg-orange-100 { background: hsl(var(--orange-100)); }
+
+    .text-foreground { color: hsl(var(--foreground)); }
+    .text-muted { color: hsl(var(--muted-foreground)); }
+    .text-primary-fg { color: hsl(var(--primary-foreground)); }
+    .text-destructive { color: hsl(var(--destructive)); }
+    .text-orange-500 { color: hsl(var(--orange-500)); }
+    .text-orange-600 { color: hsl(var(--orange-600)); }
+    .text-orange-700 { color: hsl(var(--orange-700)); }
+
+    .border-border { border-color: hsl(var(--border)); }
+
+    /* Metadata labels */
+    .meta-label {
+      font-family: var(--font-sans);
+      font-size: var(--text-meta-base);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: hsl(var(--muted-foreground));
+    }
+    .meta-xs {
+      font-size: var(--text-meta-xs);
+      letter-spacing: var(--tracking-wide);
+    }
+    .meta-sm {
+      font-size: var(--text-meta-sm);
+      letter-spacing: var(--tracking-wide);
+    }
+    .meta-md {
+      font-size: var(--text-meta-md);
+      letter-spacing: var(--tracking-wide);
+    }
+
+    /* ══════════════════════════════════════════════
+       LAYOUT
+       ══════════════════════════════════════════════ */
+    .page-container {
+      max-width: var(--layout-max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    @media (min-width: 768px) {
+      .page-container { padding: 0 48px; }
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid hsl(var(--border));
+      margin: 64px 0;
+    }
+
+    .section-title {
+      font-family: var(--font-sans);
+      font-size: var(--text-meta-md);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-widest);
+      color: hsl(var(--muted-foreground));
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid hsl(var(--border));
+    }
+
+    /* ══════════════════════════════════════════════
+       HEADER / NAV
+       ══════════════════════════════════════════════ */
+    .site-header {
+      background: hsl(var(--background-secondary));
+      border-bottom: 1px solid hsl(var(--border));
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .header-inner {
+      max-width: var(--layout-max);
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    @media (min-width: 768px) {
+      .header-inner { padding: 0 48px; }
+    }
+    .logo {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 700;
+      color: hsl(var(--foreground));
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-link {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: hsl(var(--muted-foreground));
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: hsl(var(--foreground)); }
+    .nav-link.active {
+      color: hsl(var(--foreground));
+      font-weight: 500;
+      border-bottom: 2px solid hsl(var(--foreground));
+      padding-bottom: 2px;
+    }
+    .nav-link.accent {
+      color: hsl(var(--orange-500));
+    }
+    .nav-link.accent:hover {
+      color: hsl(var(--orange-600));
+    }
+
+    /* Dark mode toggle */
+    .theme-toggle {
+      background: none;
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      padding: 6px 10px;
+      cursor: pointer;
+      color: hsl(var(--foreground));
+      font-size: 16px;
+      transition: background 0.2s;
+    }
+    .theme-toggle:hover {
+      background: hsl(var(--accent));
+    }
+
+    /* Search trigger */
+    .search-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      background: hsl(var(--background));
+      color: hsl(var(--muted-foreground));
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .search-trigger:hover {
+      border-color: hsl(var(--muted-foreground));
+    }
+    .search-trigger kbd {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      background: hsl(var(--muted));
+      border: 1px solid hsl(var(--border));
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+
+    /* ══════════════════════════════════════════════
+       BOOKSHELF (HOMEPAGE)
+       ══════════════════════════════════════════════ */
+    .bookshelf-section {
+      padding: 64px 0;
+    }
+    .bookshelf-title {
+      font-family: var(--font-serif);
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    @media (min-width: 768px) {
+      .bookshelf-title { font-size: 64px; }
+    }
+    .bookshelf-tagline {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-style: italic;
+      color: hsl(var(--muted-foreground));
+      margin-bottom: 48px;
+    }
+
+    .shelf {
+      display: flex;
+      gap: 16px;
+      align-items: flex-end;
+      padding: 24px 0;
+      border-bottom: 4px solid hsl(var(--foreground));
+      overflow-x: auto;
+      margin-bottom: 48px;
+    }
+
+    .book {
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: 2px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px 12px;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+      position: relative;
+    }
+    .book:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
+    }
+    .book-spine {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      flex-grow: 1;
+    }
+    .book-category {
+      font-size: var(--text-meta-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: hsl(var(--orange-600));
+      margin-top: 8px;
+    }
+    .book-volume {
+      font-size: var(--text-meta-sm);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-widest);
+      color: hsl(var(--muted-foreground));
+    }
+    .book-recent {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: hsl(var(--orange-500));
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ══════════════════════════════════════════════
+       SERIES DETAIL
+       ══════════════════════════════════════════════ */
+    .series-header {
+      padding: 48px 0 32px;
+      border-bottom: 1px solid hsl(var(--border));
+      margin-bottom: 32px;
+    }
+    .series-category-badge {
+      display: inline-block;
+      font-size: var(--text-meta-md);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: hsl(var(--orange-600));
+      margin-bottom: 12px;
+    }
+    .series-title {
+      font-family: var(--font-serif);
+      font-size: 36px;
+      font-style: italic;
+      font-weight: 400;
+      margin-bottom: 12px;
+    }
+    .series-description {
+      color: hsl(var(--muted-foreground));
+      font-size: 16px;
+      max-width: var(--reading-width);
+      margin-bottom: 16px;
+    }
+    .series-stats {
+      display: flex;
+      gap: 24px;
+    }
+    .series-stat {
+      font-size: var(--text-meta-base);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: hsl(var(--muted-foreground));
+    }
+
+    .series-post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .series-post-item {
+      padding: 24px 0;
+      border-bottom: 1px solid hsl(var(--border));
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .series-post-item:hover {
+      background: hsl(var(--accent));
+      margin: 0 -16px;
+      padding-left: 16px;
+      padding-right: 16px;
+      border-radius: var(--radius);
+    }
+    .series-post-order {
+      font-size: var(--text-meta-sm);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-widest);
+      color: hsl(var(--muted-foreground));
+      margin-bottom: 4px;
+    }
+    .series-post-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .series-post-excerpt {
+      color: hsl(var(--muted-foreground));
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ══════════════════════════════════════════════
+       POST DETAIL — 2-COLUMN LAYOUT
+       ══════════════════════════════════════════════ */
+    .post-detail {
+      padding: 48px 0;
+    }
+    .post-layout {
+      display: block;
+    }
+    @media (min-width: 1024px) {
+      .post-layout {
+        display: grid;
+        grid-template-columns: var(--sidebar-width) 1fr;
+        gap: 48px;
+      }
+    }
+
+    /* Sidebar */
+    .post-sidebar {
+      display: none;
+    }
+    @media (min-width: 1024px) {
+      .post-sidebar {
+        display: block;
+        position: sticky;
+        top: 96px;
+        align-self: start;
+      }
+    }
+    .sidebar-section {
+      margin-bottom: 32px;
+    }
+    .sidebar-section-title {
+      font-size: var(--text-meta-base);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: hsl(var(--muted-foreground));
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid hsl(var(--border));
+    }
+    .sidebar-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 6px 0;
+    }
+    .sidebar-meta-key {
+      font-size: var(--text-meta-base);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: hsl(var(--muted-foreground));
+    }
+    .sidebar-meta-value {
+      font-size: 14px;
+      color: hsl(var(--foreground));
+    }
+    .sidebar-meta-value.accent {
+      color: hsl(var(--orange-500));
+    }
+
+    /* TOC */
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .toc-item {
+      font-size: 13px;
+      color: hsl(var(--muted-foreground));
+      padding: 4px 0 4px 12px;
+      border-left: 2px solid transparent;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .toc-item:hover {
+      color: hsl(var(--foreground));
+    }
+    .toc-item.active {
+      color: hsl(var(--orange-500));
+      border-left-color: hsl(var(--orange-500));
+      font-weight: 500;
+    }
+    .toc-item.nested {
+      padding-left: 24px;
+      font-size: 12px;
+    }
+
+    /* Series Nav */
+    .series-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .series-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: hsl(var(--muted-foreground));
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      border: 1px solid hsl(var(--border));
+      transition: background 0.2s, color 0.2s;
+    }
+    .series-nav-link:hover {
+      background: hsl(var(--accent));
+      color: hsl(var(--foreground));
+    }
+    .series-nav-label {
+      font-size: var(--text-meta-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: hsl(var(--muted-foreground));
+    }
+
+    /* Article */
+    .article-content {
+      max-width: var(--reading-width);
+    }
+    .article-title {
+      font-family: var(--font-serif);
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    @media (min-width: 768px) {
+      .article-title { font-size: 44px; }
+    }
+
+    /* Mobile metadata (visible below lg) */
+    .mobile-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 16px 0;
+      margin-bottom: 24px;
+      border-top: 1px solid hsl(var(--border));
+      border-bottom: 1px solid hsl(var(--border));
+    }
+    @media (min-width: 1024px) {
+      .mobile-meta { display: none; }
+    }
+
+    /* Prose styling */
+    .prose {
+      font-size: 16px;
+      line-height: 1.8;
+      color: hsl(var(--foreground));
+    }
+    .prose h2 {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-style: italic;
+      font-weight: 400;
+      margin: 48px 0 16px;
+    }
+    .prose h3 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 600;
+      margin: 32px 0 12px;
+    }
+    .prose p {
+      margin-bottom: 16px;
+    }
+    .prose a {
+      color: hsl(var(--orange-500));
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .prose a:hover {
+      color: hsl(var(--orange-600));
+    }
+    .prose code {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      background: hsl(var(--muted));
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .prose pre {
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 24px 0;
+      overflow-x: auto;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .prose blockquote {
+      border-left: 3px solid hsl(var(--orange-400));
+      background: hsl(var(--orange-50));
+      padding: 16px 20px;
+      margin: 24px 0;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      color: hsl(var(--orange-700));
+      font-style: italic;
+    }
+    .prose ul, .prose ol {
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+    .prose li {
+      margin-bottom: 8px;
+    }
+
+    /* ══════════════════════════════════════════════
+       ARCHIVE — SIDEBAR + POST GRID
+       ══════════════════════════════════════════════ */
+    .archive-layout {
+      display: block;
+      padding: 48px 0;
+    }
+    @media (min-width: 1024px) {
+      .archive-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 48px;
+      }
+    }
+
+    .archive-sidebar {
+      background: hsl(var(--background-sidebar));
+      border-right: 1px solid hsl(var(--border));
+      padding: 24px;
+      border-radius: var(--radius);
+      margin-bottom: 32px;
+      align-self: start;
+    }
+    @media (min-width: 1024px) {
+      .archive-sidebar {
+        position: sticky;
+        top: 96px;
+        margin-bottom: 0;
+      }
+    }
+    .filter-group {
+      margin-bottom: 24px;
+    }
+    .filter-title {
+      font-size: var(--text-meta-base);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: hsl(var(--muted-foreground));
+      margin-bottom: 12px;
+    }
+    .filter-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      font-size: 14px;
+      color: hsl(var(--foreground));
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .filter-option:hover {
+      color: hsl(var(--orange-500));
+    }
+    .filter-option.active {
+      color: hsl(var(--orange-500));
+      font-weight: 500;
+    }
+    .filter-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: hsl(var(--border));
+    }
+    .filter-option.active .filter-dot {
+      background: hsl(var(--orange-500));
+    }
+
+    /* Post cards */
+    .post-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .post-card {
+      padding: 24px 0;
+      border-bottom: 1px solid hsl(var(--border));
+    }
+    .post-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .post-card-title {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .post-card-title:hover {
+      color: hsl(var(--orange-500));
+    }
+    .post-card-excerpt {
+      font-size: 14px;
+      color: hsl(var(--muted-foreground));
+      line-height: 1.6;
+    }
+    .post-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 48px;
+    }
+    .pagination-btn {
+      padding: 8px 16px;
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      background: none;
+      color: hsl(var(--foreground));
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .pagination-btn:hover {
+      background: hsl(var(--accent));
+    }
+    .pagination-btn.active {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      border-color: hsl(var(--primary));
+    }
+    .pagination-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* ══════════════════════════════════════════════
+       COMPONENTS SHOWCASE
+       ══════════════════════════════════════════════ */
+
+    /* Tag pills */
+    .tag-pill {
+      display: inline-block;
+      border: 1px solid hsl(var(--border));
+      border-radius: 999px;
+      padding: 3px 12px;
+      font-size: var(--text-meta-base);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: hsl(var(--muted-foreground));
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tag-pill:hover {
+      color: hsl(var(--orange-500));
+      border-color: hsl(var(--orange-500));
+    }
+    .tag-pill.active {
+      color: hsl(var(--orange-500));
+      border-color: hsl(var(--orange-500));
+      background: hsl(var(--orange-50));
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      border: none;
+    }
+    .btn-primary {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+    }
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+    .btn-secondary {
+      background: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      border: 1px solid hsl(var(--border));
+    }
+    .btn-secondary:hover {
+      background: hsl(var(--accent));
+    }
+    .btn-ghost {
+      background: none;
+      color: hsl(var(--foreground));
+    }
+    .btn-ghost:hover {
+      background: hsl(var(--accent));
+    }
+    .btn-destructive {
+      background: hsl(var(--destructive));
+      color: hsl(var(--destructive-foreground));
+    }
+    .btn-accent {
+      background: hsl(var(--orange-500));
+      color: white;
+    }
+    .btn-accent:hover {
+      background: hsl(var(--orange-600));
+    }
+
+    /* Focus ring demo */
+    .input-demo {
+      width: 100%;
+      max-width: 400px;
+      padding: 10px 14px;
+      border: 1px solid hsl(var(--input));
+      border-radius: var(--radius);
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      font-family: var(--font-sans);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-demo:focus {
+      border-color: hsl(var(--orange-200));
+      box-shadow: 0 0 0 3px hsl(var(--orange-100));
+    }
+
+    /* Cards */
+    .card-demo {
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .card-demo:hover {
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.06), 0 4px 6px -4px rgba(0,0,0,0.04);
+    }
+
+    /* Skeleton */
+    .skeleton {
+      background: hsl(var(--muted));
+      border-radius: var(--radius);
+      animation: skeleton-pulse 2s ease-in-out infinite;
+    }
+    @keyframes skeleton-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Traffic light (auto-save indicator) */
+    .traffic-light {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .traffic-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .traffic-dot.synced { background: #22c55e; }
+    .traffic-dot.saving { background: #eab308; animation: pulse 1s infinite; }
+    .traffic-dot.error { background: hsl(var(--destructive)); }
+    .traffic-label {
+      font-size: var(--text-meta-base);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: hsl(var(--muted-foreground));
+    }
+
+    /* ══════════════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════════════ */
+    .site-footer {
+      background: hsl(var(--background-secondary));
+      border-top: 1px solid hsl(var(--border));
+      padding: 32px 0;
+      margin-top: 64px;
+    }
+    .footer-inner {
+      max-width: var(--layout-max);
+      margin: 0 auto;
+      padding: 0 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-text {
+      font-size: 13px;
+      color: hsl(var(--muted-foreground));
+    }
+
+    /* ══════════════════════════════════════════════
+       COMPONENT GRID (for showcase section)
+       ══════════════════════════════════════════════ */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    @media (min-width: 768px) {
+      .showcase-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .showcase-item {
+      padding: 24px;
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+    }
+    .showcase-label {
+      font-size: var(--text-meta-base);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: hsl(var(--muted-foreground));
+      margin-bottom: 16px;
+    }
+
+    /* Login card */
+    .login-card {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 48px 32px;
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+    }
+    .login-title {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .login-subtitle {
+      text-align: center;
+      color: hsl(var(--muted-foreground));
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    .oauth-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 12px;
+      border: 1px solid hsl(var(--border));
+      transition: box-shadow 0.2s;
+    }
+    .oauth-btn:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .oauth-google {
+      background: white;
+      color: #1f1f1f;
+    }
+    .oauth-github {
+      background: #24292f;
+      color: white;
+      border-color: #24292f;
+    }
+    .dark .oauth-github {
+      background: hsl(var(--secondary));
+      color: hsl(var(--foreground));
+      border-color: hsl(var(--border));
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════════ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#" class="logo">CodeShelf</a>
+      <nav class="nav-links">
+        <a href="#bookshelf" class="nav-link active">Shelf</a>
+        <a href="#archive" class="nav-link">Archive</a>
+        <div class="search-trigger">
+          Search... <kbd>⌘K</kbd>
+        </div>
+        <a href="#login" class="nav-link accent">Sign in</a>
+        <button class="theme-toggle" onclick="toggleDark()" id="themeBtn" title="Toggle dark mode">🌙</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 1: BOOKSHELF (HOMEPAGE)
+         ═══════════════════════════════════════════ -->
+    <section class="bookshelf-section page-container" id="bookshelf">
+      <h1 class="bookshelf-title font-serif">CodeShelf</h1>
+      <p class="bookshelf-tagline">Write once. Index forever.</p>
+
+      <div class="section-title">On the Shelf</div>
+
+      <div class="shelf">
+        <!-- Books with varying heights/widths -->
+        <div class="book" style="width: 70px; height: 240px;">
+          <div class="book-volume">VOL. 01</div>
+          <div class="book-spine">Next.js Patterns</div>
+          <div class="book-category">DEV</div>
+          <div class="book-recent"></div>
+        </div>
+        <div class="book" style="width: 85px; height: 300px;">
+          <div class="book-volume">VOL. 02</div>
+          <div class="book-spine">Supabase Deep Dive</div>
+          <div class="book-category">CLOUD</div>
+        </div>
+        <div class="book" style="width: 60px; height: 200px;">
+          <div class="book-volume">VOL. 03</div>
+          <div class="book-spine">React Hooks</div>
+          <div class="book-category">LIB</div>
+        </div>
+        <div class="book" style="width: 90px; height: 350px;">
+          <div class="book-volume">VOL. 04</div>
+          <div class="book-spine">Building REST APIs with Express</div>
+          <div class="book-category">API</div>
+          <div class="book-recent"></div>
+        </div>
+        <div class="book" style="width: 65px; height: 180px;">
+          <div class="book-volume">VOL. 05</div>
+          <div class="book-spine">CSS Grid</div>
+          <div class="book-category">DOCS</div>
+        </div>
+        <div class="book" style="width: 75px; height: 260px;">
+          <div class="book-volume">VOL. 06</div>
+          <div class="book-spine">TypeScript Strict Mode</div>
+          <div class="book-category">TOOL</div>
+        </div>
+        <div class="book" style="width: 80px; height: 280px;">
+          <div class="book-volume">VOL. 07</div>
+          <div class="book-spine">Data Modeling Patterns</div>
+          <div class="book-category">DATA</div>
+        </div>
+        <div class="book" style="width: 55px; height: 160px;">
+          <div class="book-volume">VOL. 08</div>
+          <div class="book-spine">Auth</div>
+          <div class="book-category">CLOUD</div>
+        </div>
+      </div>
+
+      <!-- Recent posts below shelf -->
+      <div class="section-title">Recent Posts</div>
+      <div class="post-grid">
+        <div class="post-card">
+          <div class="post-card-meta">
+            <span class="meta-label meta-xs">MAR 14, 2026</span>
+            <span class="meta-label meta-xs" style="color: hsl(var(--orange-600));">DEV</span>
+            <span class="meta-label meta-xs">2.4K CHARS</span>
+          </div>
+          <div class="post-card-title">Understanding Server Components in Next.js 16</div>
+          <p class="post-card-excerpt">A deep dive into how React Server Components work under the hood and why they matter for performance-critical applications.</p>
+          <div class="post-card-tags">
+            <span class="tag-pill">NEXT-JS</span>
+            <span class="tag-pill">REACT</span>
+            <span class="tag-pill">RSC</span>
+          </div>
+        </div>
+        <div class="post-card">
+          <div class="post-card-meta">
+            <span class="meta-label meta-xs">MAR 12, 2026</span>
+            <span class="meta-label meta-xs" style="color: hsl(var(--orange-600));">API</span>
+            <span class="meta-label meta-xs">5.1K CHARS</span>
+          </div>
+          <div class="post-card-title">Row Level Security: The Complete Guide</div>
+          <p class="post-card-excerpt">How to implement fine-grained access control using Supabase RLS policies without building custom middleware.</p>
+          <div class="post-card-tags">
+            <span class="tag-pill">SUPABASE</span>
+            <span class="tag-pill">SECURITY</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider page-container">
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 2: SERIES DETAIL
+         ═══════════════════════════════════════════ -->
+    <section class="page-container" id="series-detail">
+      <div class="section-title">Series Detail Page</div>
+
+      <div class="series-header">
+        <div class="series-category-badge">DEV</div>
+        <h2 class="series-title">Next.js Patterns</h2>
+        <p class="series-description">A comprehensive guide to building production-ready applications with Next.js 16 App Router, covering everything from data fetching to deployment strategies.</p>
+        <div class="series-stats">
+          <span class="series-stat">6 POSTS</span>
+          <span class="series-stat">24.8K CHARS</span>
+          <span class="series-stat">BY JIWON</span>
+        </div>
+      </div>
+
+      <div class="series-post-list">
+        <div class="series-post-item">
+          <div class="series-post-order">CHAPTER 01</div>
+          <div class="series-post-title font-serif">Project Structure and Configuration</div>
+          <p class="series-post-excerpt">Setting up a scalable Next.js project with TypeScript strict mode, path aliases, and environment configuration.</p>
+        </div>
+        <div class="series-post-item">
+          <div class="series-post-order">CHAPTER 02</div>
+          <div class="series-post-title font-serif">Server Components vs Client Components</div>
+          <p class="series-post-excerpt">Understanding the rendering boundary and when to use each component type for optimal performance.</p>
+        </div>
+        <div class="series-post-item">
+          <div class="series-post-order">CHAPTER 03</div>
+          <div class="series-post-title font-serif">Data Fetching with Server Actions</div>
+          <p class="series-post-excerpt">Replacing API routes with Server Actions for mutations and using server components for data loading.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider page-container">
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 3: POST DETAIL (2-COLUMN)
+         ═══════════════════════════════════════════ -->
+    <section class="post-detail page-container" id="post-detail">
+      <div class="section-title">Post Detail Page (2-Column Layout)</div>
+
+      <div class="post-layout">
+        <!-- Sidebar -->
+        <aside class="post-sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Post Info</div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-key">Published</span>
+              <span class="sidebar-meta-value">Mar 14, 2026</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-key">Author</span>
+              <span class="sidebar-meta-value">Jiwon</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-key">Category</span>
+              <span class="sidebar-meta-value accent">DEV</span>
+            </div>
+            <div class="sidebar-meta-row">
+              <span class="sidebar-meta-key">Characters</span>
+              <span class="sidebar-meta-value">2.4K</span>
+            </div>
+            <div style="display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;">
+              <span class="tag-pill">NEXT-JS</span>
+              <span class="tag-pill">REACT</span>
+              <span class="tag-pill">RSC</span>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Table of Contents</div>
+            <ul class="toc-list">
+              <li class="toc-item active">Introduction</li>
+              <li class="toc-item">What Are Server Components?</li>
+              <li class="toc-item nested">The Mental Model</li>
+              <li class="toc-item nested">Rendering Boundary</li>
+              <li class="toc-item">When to Use Client Components</li>
+              <li class="toc-item">Data Fetching Patterns</li>
+              <li class="toc-item nested">Parallel Fetching</li>
+              <li class="toc-item">Common Pitfalls</li>
+              <li class="toc-item">Conclusion</li>
+            </ul>
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Series Navigation</div>
+            <div class="series-nav">
+              <a href="#" class="series-nav-link">
+                <span class="series-nav-label">PREV</span>
+                <span>Project Structure</span>
+              </a>
+              <a href="#" class="series-nav-link">
+                <span class="series-nav-label">NEXT</span>
+                <span>Data Fetching</span>
+              </a>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Article -->
+        <article class="article-content">
+          <h1 class="article-title">Understanding Server Components in Next.js 16</h1>
+
+          <!-- Mobile meta (shown < lg) -->
+          <div class="mobile-meta">
+            <span class="meta-label">MAR 14, 2026</span>
+            <span class="meta-label" style="color: hsl(var(--orange-600));">DEV</span>
+            <span class="meta-label">2.4K CHARS</span>
+            <span class="meta-label">BY JIWON</span>
+          </div>
+
+          <div class="prose">
+            <p>React Server Components represent a fundamental shift in how we think about building React applications. Instead of shipping JavaScript for every component to the browser, server components render entirely on the server and send only the HTML result.</p>
+
+            <h2>What Are Server Components?</h2>
+            <p>At their core, Server Components are React components that <strong>execute exclusively on the server</strong>. They can directly access databases, file systems, and other server-side resources without exposing those operations to the client.</p>
+
+            <blockquote>
+              Server Components let you write components that render on the server and have zero impact on your client bundle size.
+            </blockquote>
+
+            <h3>The Mental Model</h3>
+            <p>Think of it this way: your component tree is split into two worlds. The server world can do anything a Node.js process can do. The client world is what runs in the browser. The boundary between them is the <code>'use client'</code> directive.</p>
+
+            <pre><code>// This is a Server Component (default)
+async function PostList() {
+  const posts = await db.posts.findMany()
+  return (
+    &lt;ul&gt;
+      {posts.map(post =&gt; (
+        &lt;li key={post.id}&gt;{post.title}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  )
+}</code></pre>
+
+            <h2>When to Use Client Components</h2>
+            <p>You need client components when your UI requires:</p>
+            <ul>
+              <li>Event handlers (<code>onClick</code>, <code>onChange</code>)</li>
+              <li>Browser APIs (<code>window</code>, <code>localStorage</code>)</li>
+              <li>React hooks (<code>useState</code>, <code>useEffect</code>)</li>
+              <li>Third-party libraries that use browser APIs</li>
+            </ul>
+
+            <h2>Common Pitfalls</h2>
+            <p>The most common mistake is marking too many components as client components. Start server-first and only add <code>'use client'</code> when you need interactivity. Push client boundaries as low in the tree as possible.</p>
+
+            <p>Another pitfall: passing non-serializable props across the server-client boundary. Functions, class instances, and Symbols cannot cross this boundary. Stick to plain objects, arrays, and primitives.</p>
+
+            <h2>Conclusion</h2>
+            <p>Server Components are not just a performance optimization — they represent a new architecture for React applications. By default, your code runs on the server. You opt into the client only when you need it. This mental model leads to faster, lighter applications with better developer ergonomics.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <hr class="section-divider page-container">
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 4: ARCHIVE
+         ═══════════════════════════════════════════ -->
+    <section class="page-container" id="archive">
+      <div class="section-title">Archive Page</div>
+
+      <div class="archive-layout">
+        <!-- Sidebar -->
+        <aside class="archive-sidebar">
+          <div class="filter-group">
+            <div class="filter-title">Category</div>
+            <div class="filter-option active"><span class="filter-dot"></span> All</div>
+            <div class="filter-option"><span class="filter-dot"></span> API</div>
+            <div class="filter-option"><span class="filter-dot"></span> DOCS</div>
+            <div class="filter-option"><span class="filter-dot"></span> LIB</div>
+            <div class="filter-option"><span class="filter-dot"></span> TOOL</div>
+            <div class="filter-option"><span class="filter-dot"></span> DEV</div>
+            <div class="filter-option"><span class="filter-dot"></span> CLOUD</div>
+            <div class="filter-option"><span class="filter-dot"></span> DATA</div>
+          </div>
+          <div class="filter-group">
+            <div class="filter-title">Sort</div>
+            <div class="filter-option active"><span class="filter-dot"></span> Latest</div>
+            <div class="filter-option"><span class="filter-dot"></span> Oldest</div>
+          </div>
+          <div class="filter-group">
+            <div class="filter-title">Tags</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <span class="tag-pill" style="font-size: 10px;">NEXT-JS</span>
+              <span class="tag-pill active" style="font-size: 10px;">REACT</span>
+              <span class="tag-pill" style="font-size: 10px;">SUPABASE</span>
+              <span class="tag-pill" style="font-size: 10px;">TYPESCRIPT</span>
+              <span class="tag-pill" style="font-size: 10px;">CSS</span>
+              <span class="tag-pill" style="font-size: 10px;">TAILWIND</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Posts -->
+        <div>
+          <div class="post-grid">
+            <div class="post-card">
+              <div class="post-card-meta">
+                <span class="meta-label meta-xs">MAR 14, 2026</span>
+                <span class="meta-label meta-xs" style="color: hsl(var(--orange-600));">DEV</span>
+                <span class="meta-label meta-xs">2.4K CHARS</span>
+                <span class="meta-label meta-xs">JIWON</span>
+              </div>
+              <div class="post-card-title">Understanding Server Components in Next.js 16</div>
+              <p class="post-card-excerpt">A deep dive into how React Server Components work under the hood and why they matter.</p>
+              <div class="post-card-tags">
+                <span class="tag-pill">NEXT-JS</span>
+                <span class="tag-pill">REACT</span>
+              </div>
+            </div>
+            <div class="post-card">
+              <div class="post-card-meta">
+                <span class="meta-label meta-xs">MAR 12, 2026</span>
+                <span class="meta-label meta-xs" style="color: hsl(var(--orange-600));">API</span>
+                <span class="meta-label meta-xs">5.1K CHARS</span>
+                <span class="meta-label meta-xs">JIWON</span>
+              </div>
+              <div class="post-card-title">Row Level Security: The Complete Guide</div>
+              <p class="post-card-excerpt">How to implement fine-grained access control using Supabase RLS policies.</p>
+              <div class="post-card-tags">
+                <span class="tag-pill">SUPABASE</span>
+                <span class="tag-pill">SECURITY</span>
+              </div>
+            </div>
+            <div class="post-card">
+              <div class="post-card-meta">
+                <span class="meta-label meta-xs">MAR 10, 2026</span>
+                <span class="meta-label meta-xs" style="color: hsl(var(--orange-600));">LIB</span>
+                <span class="meta-label meta-xs">3.8K CHARS</span>
+                <span class="meta-label meta-xs">JIWON</span>
+              </div>
+              <div class="post-card-title">Building Custom Hooks That Don't Suck</div>
+              <p class="post-card-excerpt">Patterns for reusable, testable React hooks with proper cleanup and dependency management.</p>
+              <div class="post-card-tags">
+                <span class="tag-pill">REACT</span>
+                <span class="tag-pill">HOOKS</span>
+              </div>
+            </div>
+            <div class="post-card">
+              <div class="post-card-meta">
+                <span class="meta-label meta-xs">MAR 8, 2026</span>
+                <span class="meta-label meta-xs" style="color: hsl(var(--orange-600));">TOOL</span>
+                <span class="meta-label meta-xs">1.9K CHARS</span>
+                <span class="meta-label meta-xs">JIWON</span>
+              </div>
+              <div class="post-card-title">TypeScript Strict Mode: Why and How</div>
+              <p class="post-card-excerpt">Enabling strict mode catches bugs at compile time. Here's how to migrate an existing project.</p>
+              <div class="post-card-tags">
+                <span class="tag-pill">TYPESCRIPT</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pagination">
+            <button class="pagination-btn" disabled>← Prev</button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">Next →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider page-container">
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 5: LOGIN
+         ═══════════════════════════════════════════ -->
+    <section class="page-container" id="login" style="padding: 48px 0;">
+      <div class="section-title">Login Page</div>
+
+      <div class="login-card">
+        <h2 class="login-title">Welcome Back</h2>
+        <p class="login-subtitle">Sign in to start writing</p>
+        <button class="oauth-btn oauth-google">
+          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#34A853" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#EA4335" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          Continue with Google
+        </button>
+        <button class="oauth-btn oauth-github">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          Continue with GitHub
+        </button>
+      </div>
+    </section>
+
+    <hr class="section-divider page-container">
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 6: COMPONENT SHOWCASE
+         ═══════════════════════════════════════════ -->
+    <section class="page-container" id="components" style="padding: 48px 0;">
+      <div class="section-title">Component Showcase</div>
+
+      <div class="showcase-grid">
+        <!-- Typography -->
+        <div class="showcase-item">
+          <div class="showcase-label">Typography</div>
+          <h1 class="font-serif" style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">Page Title (Playfair Bold)</h1>
+          <h2 class="font-serif" style="font-size: 28px; font-style: italic; font-weight: 400; margin-bottom: 8px;">Section Heading (Playfair Italic)</h2>
+          <h3 class="font-serif" style="font-size: 22px; font-weight: 600; margin-bottom: 8px;">Subsection (Playfair Semibold)</h3>
+          <p style="font-size: 16px; margin-bottom: 8px; color: hsl(var(--foreground));">Body text in Pretendard Variable. The quick brown fox jumps over the lazy dog.</p>
+          <p style="font-size: 14px; color: hsl(var(--muted-foreground));">Secondary text in Pretendard at 14px muted.</p>
+        </div>
+
+        <!-- Metadata Labels -->
+        <div class="showcase-item">
+          <div class="showcase-label">Metadata Label Scale</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <span class="meta-label meta-xs">9PX · TRACKING-WIDE · META-XS</span>
+              <div style="font-size: 11px; color: hsl(var(--muted-foreground)); margin-top: 2px;">Timestamps, smallest metadata</div>
+            </div>
+            <div>
+              <span class="meta-label" style="font-size: var(--text-meta-sm); letter-spacing: var(--tracking-wide);">10PX · TRACKING-WIDE · META-SM</span>
+              <div style="font-size: 11px; color: hsl(var(--muted-foreground)); margin-top: 2px;">Character counts, volume numbers</div>
+            </div>
+            <div>
+              <span class="meta-label">11PX · TRACKING-LABEL · META-BASE</span>
+              <div style="font-size: 11px; color: hsl(var(--muted-foreground)); margin-top: 2px;">Standard labels (PUBLISHED, AUTHOR)</div>
+            </div>
+            <div>
+              <span class="meta-label meta-md">12PX · TRACKING-WIDE · META-MD</span>
+              <div style="font-size: 11px; color: hsl(var(--muted-foreground)); margin-top: 2px;">Category badges, larger labels</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tracking Scale -->
+        <div class="showcase-item">
+          <div class="showcase-label">Letter Spacing Scale</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <span class="meta-label" style="letter-spacing: var(--tracking-tightest);">TRACKING-TIGHTEST (0.1EM)</span>
+            <span class="meta-label" style="letter-spacing: var(--tracking-label);">TRACKING-LABEL (0.2EM)</span>
+            <span class="meta-label" style="letter-spacing: var(--tracking-mid);">TRACKING-MID (0.3EM)</span>
+            <span class="meta-label" style="letter-spacing: var(--tracking-wide);">TRACKING-WIDE (0.4EM)</span>
+            <span class="meta-label" style="letter-spacing: var(--tracking-wider);">TRACKING-WIDER (0.5EM)</span>
+            <span class="meta-label" style="letter-spacing: var(--tracking-widest);">TRACKING-WIDEST (0.6EM)</span>
+          </div>
+        </div>
+
+        <!-- Tag Pills -->
+        <div class="showcase-item">
+          <div class="showcase-label">Tag Variants</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span class="tag-pill">DEFAULT</span>
+            <span class="tag-pill active">ACTIVE</span>
+            <span class="tag-pill" style="color: hsl(var(--orange-500)); border-color: hsl(var(--orange-500));">ORANGE</span>
+            <span class="tag-pill" style="background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border-color: hsl(var(--primary));">FILLED</span>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="showcase-item">
+          <div class="showcase-label">Buttons</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <button class="btn btn-primary">Primary</button>
+            <button class="btn btn-secondary">Secondary</button>
+            <button class="btn btn-ghost">Ghost</button>
+            <button class="btn btn-accent">Accent</button>
+            <button class="btn btn-destructive">Delete</button>
+          </div>
+        </div>
+
+        <!-- Input Focus -->
+        <div class="showcase-item">
+          <div class="showcase-label">Input Focus Ring</div>
+          <input class="input-demo" type="text" placeholder="Click to see orange focus ring...">
+          <div style="margin-top: 12px;">
+            <input class="input-demo" type="text" placeholder="Post title..." style="font-family: var(--font-serif); font-size: 20px;">
+          </div>
+        </div>
+
+        <!-- Card -->
+        <div class="showcase-item">
+          <div class="showcase-label">Card (hover for shadow)</div>
+          <div class="card-demo" style="transition: box-shadow 0.3s cubic-bezier(0.23, 1, 0.32, 1);">
+            <h3 class="font-serif" style="font-size: 18px; margin-bottom: 8px;">Card Title</h3>
+            <p style="font-size: 14px; color: hsl(var(--muted-foreground));">Card content with bg-card background and subtle shadow. Hover to see elevated shadow.</p>
+          </div>
+        </div>
+
+        <!-- Traffic Light -->
+        <div class="showcase-item">
+          <div class="showcase-label">Auto-Save Indicator</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="traffic-light">
+              <span class="traffic-dot synced"></span>
+              <span class="traffic-label">SYNCED</span>
+            </div>
+            <div class="traffic-light">
+              <span class="traffic-dot saving"></span>
+              <span class="traffic-label">SAVING...</span>
+            </div>
+            <div class="traffic-light">
+              <span class="traffic-dot error"></span>
+              <span class="traffic-label">ERROR</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skeletons -->
+        <div class="showcase-item">
+          <div class="showcase-label">Skeleton Loaders</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="skeleton" style="height: 14px; width: 60%;"></div>
+            <div class="skeleton" style="height: 14px; width: 80%;"></div>
+            <div class="skeleton" style="height: 14px; width: 45%;"></div>
+            <div class="skeleton" style="height: 120px; width: 100%; margin-top: 8px;"></div>
+          </div>
+        </div>
+
+        <!-- Color Palette -->
+        <div class="showcase-item" style="grid-column: 1 / -1;">
+          <div class="showcase-label">Orange Accent Scale</div>
+          <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 64px; height: 48px; background: hsl(var(--orange-50)); border-radius: 4px; border: 1px solid hsl(var(--border));"></div>
+              <span class="meta-label meta-xs">50</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 64px; height: 48px; background: hsl(var(--orange-100)); border-radius: 4px;"></div>
+              <span class="meta-label meta-xs">100</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 64px; height: 48px; background: hsl(var(--orange-200)); border-radius: 4px;"></div>
+              <span class="meta-label meta-xs">200</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 64px; height: 48px; background: hsl(var(--orange-400)); border-radius: 4px;"></div>
+              <span class="meta-label meta-xs">400</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 64px; height: 48px; background: hsl(var(--orange-500)); border-radius: 4px;"></div>
+              <span class="meta-label meta-xs">500</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 64px; height: 48px; background: hsl(var(--orange-600)); border-radius: 4px;"></div>
+              <span class="meta-label meta-xs">600</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 64px; height: 48px; background: hsl(var(--orange-700)); border-radius: 4px;"></div>
+              <span class="meta-label meta-xs">700</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 64px; height: 48px; background: hsl(var(--orange-900)); border-radius: 4px;"></div>
+              <span class="meta-label meta-xs">900</span>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <div class="showcase-label">Surface Colors</div>
+            <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                <div style="width: 96px; height: 48px; background: hsl(var(--background)); border-radius: 4px; border: 1px solid hsl(var(--border));"></div>
+                <span class="meta-label meta-xs">BG</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                <div style="width: 96px; height: 48px; background: hsl(var(--background-secondary)); border-radius: 4px; border: 1px solid hsl(var(--border));"></div>
+                <span class="meta-label meta-xs">BG-2ND</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                <div style="width: 96px; height: 48px; background: hsl(var(--background-sidebar)); border-radius: 4px; border: 1px solid hsl(var(--border));"></div>
+                <span class="meta-label meta-xs">SIDEBAR</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                <div style="width: 96px; height: 48px; background: hsl(var(--card)); border-radius: 4px; border: 1px solid hsl(var(--border));"></div>
+                <span class="meta-label meta-xs">CARD</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                <div style="width: 96px; height: 48px; background: hsl(var(--muted)); border-radius: 4px; border: 1px solid hsl(var(--border));"></div>
+                <span class="meta-label meta-xs">MUTED</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                <div style="width: 96px; height: 48px; background: hsl(var(--accent)); border-radius: 4px; border: 1px solid hsl(var(--border));"></div>
+                <span class="meta-label meta-xs">ACCENT</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <div class="showcase-label">Text Selection (try selecting this text)</div>
+            <p style="font-size: 16px; line-height: 1.8;">Select this text to see the orange selection highlight. The selection uses orange-50 background with orange-900 text color, creating a warm, branded feel that matches the overall CodeShelf design language.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-text font-serif" style="font-size: 16px;">CodeShelf</span>
+      <span class="footer-text">Write once. Index forever.</span>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════
+       DARK MODE TOGGLE
+       ═══════════════════════════════════════════ -->
+  <script>
+    function toggleDark() {
+      document.documentElement.classList.toggle('dark');
+      const isDark = document.documentElement.classList.contains('dark');
+      document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+    }
+
+    // Respect system preference on load
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+      document.getElementById('themeBtn').textContent = '☀️';
+    }
+  </script>
+
+</body>
+</html>
