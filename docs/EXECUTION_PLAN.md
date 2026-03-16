@@ -13,7 +13,7 @@
 ## Phase 1: Foundation
 
 ### Task 1: Scaffold Next.js Project
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `package.json`, `tsconfig.json`, `next.config.ts`, `src/app/layout.tsx`, `src/app/page.tsx`
 - **Actions:**
   - `pnpm create next-app@latest` with TypeScript, Tailwind, App Router, src directory
@@ -23,7 +23,7 @@
 - **Commit:** `feat: scaffold Next.js 16 project with dependencies`
 
 ### Task 2: Configure Design Tokens + Tailwind
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `tailwind.config.ts`, `src/app/globals.css`, `src/app/layout.tsx`
 - **Actions:**
   - Copy CSS variables from `docs/DESIGN_TOKENS.md` into `globals.css`
@@ -35,7 +35,7 @@
 - **Commit:** `feat: configure design tokens, Tailwind, and fonts`
 
 ### Task 3: Initialize Shadcn/ui
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `components.json`, `src/lib/utils.ts`, `src/components/ui/button.tsx`
 - **Actions:**
   - `pnpm dlx shadcn@latest init` — select Radix base (not base-nova)
@@ -46,7 +46,7 @@
 - **Commit:** `feat: initialize Shadcn/ui with base components`
 
 ### Task 4: Supabase Schema + RLS
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `supabase/migrations/00001_initial_schema.sql`
 - **Actions:**
   - Write SQL per `docs/SCHEMA.md` — all 6 tables, indexes, RLS policies
@@ -58,7 +58,7 @@
 - **Commit:** `feat: add Supabase schema, RLS policies, and triggers`
 
 ### Task 5: Supabase Client Helpers
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/lib/supabase/server.ts`, `src/lib/supabase/client.ts`, `src/lib/supabase/middleware.ts`, `src/middleware.ts`, `.env.local`
 - **Actions:**
   - Create server/client/middleware Supabase helpers per `@supabase/ssr` docs
@@ -66,6 +66,16 @@
   - Middleware: refresh Supabase session on every request
 - **Acceptance:** `pnpm build` passes, protected routes redirect to `/login`
 - **Commit:** `feat: add Supabase client helpers and auth middleware`
+
+#### Phase 1 Notes
+
+> **Next.js 16 middleware deprecation:** `middleware.ts` triggers a build warning — Next.js 16 expects `proxy.ts` instead. Deferred to Phase 7 (Task 20 area). Functionality works, but migrate before production.
+
+> **Supabase schema via dashboard:** Migration SQL in `supabase/migrations/` is canonical reference but was applied via Supabase dashboard SQL editor, not `supabase db push`. Track applied state manually.
+
+> **Shadcn init overwrites globals.css:** After running `shadcn init` or `shadcn add`, always verify CSS variables in `globals.css` are intact. Restore from `DESIGN_TOKENS.md` if overwritten.
+
+> **Full issue log:** `docs/issues/Issues_Phase_1.md`
 
 ---
 
