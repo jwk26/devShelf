@@ -120,7 +120,7 @@
 ## Phase 3: Core Components
 
 ### Task 8: Layout Shell — Header, Nav, Dark Mode Toggle
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/components/site-header.tsx`, `src/components/theme-toggle.tsx`, `src/components/theme-provider.tsx`, `src/components/user-nav.tsx`, `src/app/layout.tsx`
 - **Dependencies:** Install `next-themes`
 - **Actions:**
@@ -133,7 +133,7 @@
 - **Commit:** `feat: add site header, dark mode toggle, and user nav`
 
 ### Task 9: Mobile Nav
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/components/mobile-nav.tsx`, `src/components/site-header.tsx`
 - **Actions:**
   - Hamburger menu on mobile (`md:hidden`), full nav on desktop (`hidden md:flex`)
@@ -144,7 +144,7 @@
 - **Commit:** `feat: add responsive mobile navigation`
 
 ### Task 10: Shared Components — TagBadge, Skeleton, ModalWrapper
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/components/shared/tag-badge.tsx`, `src/components/ui/skeleton.tsx`, `src/components/ui/modal-wrapper.tsx`, `src/hooks/useFocusTrap.ts`
 - **Actions:**
   - TagBadge: `rounded-full` pill, orange hover, `tracking-label`, multiple variants (default, outline, ghost, active)
@@ -153,6 +153,16 @@
   - useFocusTrap hook from codeshelf (well-implemented, keep as-is)
 - **Acceptance:** Components render with correct token classes in both light/dark
 - **Commit:** `feat: add TagBadge, Skeleton, and ModalWrapper components`
+
+#### Phase 3 Notes
+
+> **Codex "Do NOT ask questions" pattern:** Codex stops and asks when it hits ambiguity. Always add "Do NOT ask questions — make reasonable design decisions and proceed" to every Codex prompt. Pre-answer 3-5 likely decision points (avatar fallback, file conflicts, component variants). Budget 2-3 Codex runs per phase.
+
+> **Gemini post-code catches layout/touch gaps:** Codex nails functionality and a11y but misses CLS prevention (`width`/`height` on images) and touch scroll containment (`overscroll-contain` on drawers/modals). Always run both Gemini pre-code and post-code reviews — they catch different categories of issues.
+
+> **Shadcn components needed for Phase 3:** `skeleton`, `dropdown-menu` (plus `separator` from Phase 2). Verify all UI dependencies exist before launching Codex.
+
+> **Full issue log:** `docs/issues/Issues_Phase_3.md`
 
 ---
 
