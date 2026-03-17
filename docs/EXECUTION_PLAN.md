@@ -232,7 +232,7 @@
 > **Reference:** `docs/DESIGN_ALIGNMENT.md` for full gap analysis and target patterns.
 
 ### Task 4B-1: Homepage Bookshelf Redesign
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/app/page.tsx`, `src/components/series/bookshelf.tsx`, `src/components/series/bookshelf-skeleton.tsx`
 - **Actions:**
   - Full viewport height on desktop (`h-[calc(100vh-3.5rem)]`), scrollable on mobile
@@ -247,7 +247,7 @@
 - **Commit:** `feat: redesign homepage bookshelf to match editorial design`
 
 ### Task 4B-2: Archive Page Redesign
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/app/archive/page.tsx`, `src/components/archive/archive-sidebar.tsx`, `src/components/archive/archive-post-list.tsx`
 - **Actions:**
   - Sidebar: section header pattern (`Section 02` + italic `archive` + Korean), category counts, bilingual sort labels, info box
@@ -259,7 +259,7 @@
 - **Commit:** `feat: redesign archive with editorial data-table rows`
 
 ### Task 4B-3: Post Detail Redesign
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/components/post-detail/post-detail-layout.tsx`, `src/components/post-detail/article-content.tsx`, `src/components/post-detail/table-of-contents.tsx`, `src/app/series/[seriesSlug]/[postSlug]/page.tsx`, `src/app/post/[slug]/page.tsx`
 - **Actions:**
   - Three-column layout: TOC left (`lg:`, clamp width) + article center (`max-w-[800px]`) + toolbox right (`xl:`, placeholder)
@@ -271,7 +271,7 @@
 - **Commit:** `feat: redesign post detail with three-column article card layout`
 
 ### Task 4B-4: Cross-cutting Visual Identity
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/components/shared/section-header.tsx`, `src/components/shared/tag-badge.tsx`, `src/components/shared/post-row.tsx`, `src/app/globals.css`, `src/app/series/[seriesSlug]/page.tsx`
 - **Actions:**
   - Create `SectionHeader` component (number + serif title + Korean subtitle)
@@ -282,6 +282,20 @@
   - Update series detail page to use editorial patterns
 - **Acceptance:** Shared components match codeshelf-nextjs editorial aesthetic. Series detail uses same patterns.
 - **Commit:** `feat: add editorial shared components and cross-cutting visual polish`
+
+#### Phase 4B Notes
+
+> **zsh bracket glob:** `git add src/app/series/[seriesSlug]/page.tsx` fails in zsh — always quote Next.js dynamic route paths in shell commands: `git add 'src/app/series/[seriesSlug]/page.tsx'`.
+
+> **ReactNode import:** Always add `import type { ReactNode } from 'react'` explicitly when using it as a type annotation. JSX transform handles rendering but not type imports.
+
+> **globals.css @layer ordering:** Insert `@layer components` between the `@layer base` resets block and the `@layer base { .hljs { ... } }` block. Never insert inside an existing layer block.
+
+> **generateBookDimensions caller audit:** When changing a utility function's return type, run `grep -r "functionName" src/` first to find all callers. Update them atomically in the same commit.
+
+> **Spec scope discipline:** Mark Phase spec items as `[required]` vs `[nice-to-have]` to guide implementation cuts. Structural layout and component patterns are required; decorative features (animated arrow, statistics panel, play/pause control) are nice-to-have.
+
+> **Full issue log:** `docs/issues/Issues_Phase_4B.md`
 
 ---
 
