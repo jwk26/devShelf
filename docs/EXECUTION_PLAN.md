@@ -169,7 +169,7 @@
 ## Phase 4: Public Pages
 
 ### Task 11: Homepage — Bookshelf View
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/app/page.tsx`, `src/components/series/bookshelf.tsx`, `src/components/series/bookshelf-skeleton.tsx`, `src/lib/design-tokens.ts`
 - **Actions:**
   - Server component fetches all series with post counts + author info
@@ -183,7 +183,7 @@
 - **Commit:** `feat: add homepage with interactive bookshelf view`
 
 ### Task 12: Series Detail Page
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/app/series/[slug]/page.tsx`, `src/lib/queries.ts`
 - **Actions:**
   - Create shared queries module for reusable Supabase queries
@@ -194,7 +194,7 @@
 - **Commit:** `feat: add series detail page with post listing`
 
 ### Task 13: Post Detail Page
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/app/series/[seriesSlug]/[postSlug]/page.tsx`, `src/app/post/[slug]/page.tsx`, `src/components/post-detail/post-detail-layout.tsx`, `src/components/post-detail/article-content.tsx`, `src/components/post-detail/table-of-contents.tsx`, `src/components/post-detail/series-navigation.tsx`
 - **Actions:**
   - Markdown rendering: `react-markdown` + `remark-gfm` + `rehype-highlight` + `rehype-sanitize`
@@ -207,7 +207,7 @@
 - **Commit:** `feat: add post detail page with 2-column layout and markdown rendering`
 
 ### Task 14: Archive Page
-- **Status:** `[ ]`
+- **Status:** `[x]`
 - **Files:** `src/app/archive/page.tsx`, `src/components/archive/archive-sidebar.tsx`, `src/components/archive/archive-post-list.tsx`
 - **Actions:**
   - Sidebar on `bg-background-sidebar`: category filter, tag filter, sort options
@@ -216,49 +216,144 @@
 - **Acceptance:** `/archive` shows filtered, paginated posts. Sidebar filters work.
 - **Commit:** `feat: add archive page with filtering and pagination`
 
+#### Phase 4 Notes
+
+> **Codex design fidelity gap:** Codex built functional pages from spec descriptions but never saw the original codeshelf-nextjs components. Result is architecturally sound but visually unrelated to the original editorial design. Lesson: For design-heavy phases, include original component source in Codex prompt or split into function-first then design-alignment passes.
+
+> **Next.js 16 route param collision:** `series/[slug]` and `series/[seriesSlug]/[postSlug]` caused `slug !== seriesSlug` error. All dynamic segments at the same path level must share the same param name. Fixed by renaming to `series/[seriesSlug]`.
+
+> **Full issue log:** `docs/issues/Issues_Phase_4.md`
+
+---
+
+## Phase 4B: Design Alignment
+
+> **Why:** Phase 4 implementation is functionally correct but visually doesn't match the codeshelf-nextjs editorial design. This phase brings public pages to visual parity.
+> **Reference:** `docs/DESIGN_ALIGNMENT.md` for full gap analysis and target patterns.
+
+### Task 4B-1: Homepage Bookshelf Redesign
+- **Status:** `[x]`
+- **Files:** `src/app/page.tsx`, `src/components/series/bookshelf.tsx`, `src/components/series/bookshelf-skeleton.tsx`
+- **Actions:**
+  - Full viewport height on desktop (`h-[calc(100vh-3.5rem)]`), scrollable on mobile
+  - Two-panel layout: 400px sidebar (book stack) + large preview panel
+  - Horizontal book bar cards with color themes, layered shadows, paper texture, shine gradient
+  - Giant preview title (`text-6xl md:text-8xl fhd:text-9xl`), description with quote mark
+  - Section header: `Section 01` + serif italic `series` + Korean subtitle
+  - Visible auto-cycle control (play/pause + status)
+  - "Explore archive" CTA with animated arrow + statistics panel
+  - Remove "Recent Posts" section (original was bookshelf-only homepage)
+- **Acceptance:** Homepage matches codeshelf-nextjs bookshelf layout and visual feel
+- **Commit:** `feat: redesign homepage bookshelf to match editorial design`
+
+### Task 4B-2: Archive Page Redesign
+- **Status:** `[x]`
+- **Files:** `src/app/archive/page.tsx`, `src/components/archive/archive-sidebar.tsx`, `src/components/archive/archive-post-list.tsx`
+- **Actions:**
+  - Sidebar: section header pattern (`Section 02` + italic `archive` + Korean), category counts, bilingual sort labels, info box
+  - Replace card grid with data-table rows: index + date + category + title + excerpt + tags + metrics + hover arrow
+  - Table headers with bilingual labels
+  - Keep mobile collapsible sidebar (improvement over original)
+  - Keep pagination (improvement over original infinite scroll)
+- **Acceptance:** Archive matches codeshelf-nextjs editorial row-based layout
+- **Commit:** `feat: redesign archive with editorial data-table rows`
+
+### Task 4B-3: Post Detail Redesign
+- **Status:** `[x]`
+- **Files:** `src/components/post-detail/post-detail-layout.tsx`, `src/components/post-detail/article-content.tsx`, `src/components/post-detail/table-of-contents.tsx`, `src/app/series/[seriesSlug]/[postSlug]/page.tsx`, `src/app/post/[slug]/page.tsx`
+- **Actions:**
+  - Three-column layout: TOC left (`lg:`, clamp width) + article center (`max-w-[800px]`) + toolbox right (`xl:`, placeholder)
+  - Article in card wrapper (`bg-card rounded-lg shadow-sm`)
+  - Article header inside card: category + tags → title (`text-4xl md:text-5xl`) + excerpt → author card + metadata
+  - Mobile: bottom toolbar for toolbox content
+  - Update prose styling in globals.css (serif italic h2, font-light paragraphs)
+- **Acceptance:** Post detail matches codeshelf-nextjs three-column article card layout
+- **Commit:** `feat: redesign post detail with three-column article card layout`
+
+### Task 4B-4: Cross-cutting Visual Identity
+- **Status:** `[x]`
+- **Files:** `src/components/shared/section-header.tsx`, `src/components/shared/tag-badge.tsx`, `src/components/shared/post-row.tsx`, `src/app/globals.css`, `src/app/series/[seriesSlug]/page.tsx`
+- **Actions:**
+  - Create `SectionHeader` component (number + serif title + Korean subtitle)
+  - Create `PostRow` component (data-table row with index, date, category, title, tags, metrics)
+  - Update `TagBadge` — add Hash icon prefix, review variant styling to match original
+  - Update prose overrides in globals.css
+  - Replace `rounded-3xl` with `rounded-sm`/`rounded-[4px]` on cards
+  - Update series detail page to use editorial patterns
+- **Acceptance:** Shared components match codeshelf-nextjs editorial aesthetic. Series detail uses same patterns.
+- **Commit:** `feat: add editorial shared components and cross-cutting visual polish`
+
+#### Phase 4B Notes
+
+> **zsh bracket glob:** `git add src/app/series/[seriesSlug]/page.tsx` fails in zsh — always quote Next.js dynamic route paths in shell commands: `git add 'src/app/series/[seriesSlug]/page.tsx'`.
+
+> **ReactNode import:** Always add `import type { ReactNode } from 'react'` explicitly when using it as a type annotation. JSX transform handles rendering but not type imports.
+
+> **globals.css @layer ordering:** Insert `@layer components` between the `@layer base` resets block and the `@layer base { .hljs { ... } }` block. Never insert inside an existing layer block.
+
+> **generateBookDimensions caller audit:** When changing a utility function's return type, run `grep -r "functionName" src/` first to find all callers. Update them atomically in the same commit.
+
+> **Spec scope discipline:** Mark Phase spec items as `[required]` vs `[nice-to-have]` to guide implementation cuts. Structural layout and component patterns are required; decorative features (animated arrow, statistics panel, play/pause control) are nice-to-have.
+
+> **Full issue log:** `docs/issues/Issues_Phase_4B.md`
+
 ---
 
 ## Phase 5: Protected Pages
 
 ### Task 15: Dashboard
 - **Status:** `[ ]`
-- **Files:** `src/app/dashboard/page.tsx`, `src/components/dashboard/dashboard-client.tsx`, `src/components/dashboard/content-list-panel.tsx`, `src/components/dashboard/preview-pane.tsx`
+- **Files:** `src/app/dashboard/page.tsx`, `src/components/dashboard/dashboard-client.tsx`, `src/components/dashboard/content-list-panel.tsx`
+- **Design Reference:** `docs/DESIGN_ALIGNMENT.md` → Task 5A-1
 - **Actions:**
   - Server component fetches user's posts, series, stats
-  - Two-panel layout: content list (searchable, sortable) + preview pane (markdown headings outline)
-  - Stats: draft count, published count, series count
-  - Quick actions: edit, delete, publish draft
-  - **Improve from codeshelf:** Add meaningful insights beyond raw counts
-- **Acceptance:** Dashboard shows user's content with search, sort, preview
-- **Commit:** `feat: add dashboard with content management panels`
+  - **Match original design:** Profile section (serif italic name, mono role, avatar, stats) + 2×2 `RecentSection` grid
+  - `ContentListPanel`: search input + sort dropdown, selected state `bg-stone-900 text-white`, `content-visibility: auto`
+  - `RecentItemRow`: icon + title/subtitle + hover edit/delete actions (opacity-0 → group-hover:opacity-100)
+  - Density-responsive via `fhd:`/`qhd:`/`uhd:` breakpoints
+  - All labels: `font-mono text-[9px]-[11px] uppercase tracking-[0.2em]-[0.6em]`, Korean bilingual
+  - Cards: `rounded-sm border-stone-200`, not `rounded-lg`
+  - Footer bar with total stats in mono text
+- **Acceptance:** Dashboard matches codeshelf-nextjs editorial layout. Profile + grid + density-responsive rows.
+- **Commit:** `feat: add dashboard with editorial content management panels`
 
 ### Task 16: Write Page — New Post Editor
 - **Status:** `[ ]`
 - **Files:** `src/app/write/page.tsx`, `src/components/admin/post-editor.tsx`, `src/components/admin/markdown-editor.tsx`, `src/components/admin/publish-modal.tsx`, `src/app/actions/posts.ts`
+- **Design Reference:** `docs/DESIGN_ALIGNMENT.md` → Task 5A-2 (editor) + Task 5A-3 (publish modal)
 - **Actions:**
   - Server Actions: `createPost` (slug generation, excerpt auto-generation, tag upsert)
-  - PostEditor client component with EasyMDE (dynamic import, no SSR)
+  - **Match original design:** Full-screen `h-screen bg-stone-50` split-pane layout
+  - Header: `h-16 bg-white/80 backdrop-blur-sm border-b`, close button (`font-mono text-[10px] uppercase tracking-[0.3em]`), publish button (`bg-stone-900 rounded-sm`)
+  - Title input: `text-2xl font-serif`, borderless, placeholder "Untitled"
+  - Split pane: markdown editor (left) + live preview (right) with resizable divider
+  - Traffic light save indicator: green/yellow/red `w-2 h-2 rounded-full`
   - **Note from workspace2:** Don't wrap `"use client"` component in `dynamic({ ssr: false })` — guard browser-only code in `useEffect`
-  - PublishModal: 2-column (form + OG preview), category/tag autocomplete, series picker with inline creation
-  - Redirect to `/settings` if user has no username (needed for post URL)
+  - **PublishModal:** `w-[60vw] max-h-[85vh]`, two-column (55% form + 45% OG preview)
+  - Form labels: `font-mono text-[11px] uppercase tracking-[0.15em] text-stone-500`
+  - Category combobox with colored badges, tag autocomplete with validation, series picker with search/sort/inline create
+  - OG preview: mock social card (image placeholder, title, description, URL in mono)
+  - Redirect to `/settings` if user has no username
   - All actions use `ActionResult<T>` pattern
-- **Acceptance:** Can create a post with title, content, tags, category, series. Post appears on homepage/archive.
-- **Commit:** `feat: add write page with markdown editor and publish modal`
+- **Acceptance:** Full-screen editor matches codeshelf-nextjs split-pane design. Publish modal has two-column OG preview.
+- **Commit:** `feat: add write page with split-pane editor and publish modal`
 
 ### Task 17: Edit Page — Shadow Draft System
 - **Status:** `[ ]`
 - **Files:** `src/app/edit/[id]/page.tsx`, `src/app/actions/posts.ts`, `src/hooks/useAutoSave.ts`, `src/lib/checkpoint.ts`
+- **Design Reference:** `docs/DESIGN_ALIGNMENT.md` → Task 5A-2 (shares editor layout with Task 16)
 - **Actions:**
   - Load existing post (verify ownership via RLS)
-  - Reuse PostEditor with initial values
+  - Reuse PostEditor with initial values (same full-screen split-pane design as write page)
   - Shadow draft: writes to `shadow_title`/`shadow_content`/`shadow_updated_at`
   - Auto-save: hybrid local (1s) + remote (5s, 90s force) with change score
   - Checkpoint: localStorage crash recovery (3-day window for unsaved drafts)
-  - Traffic light indicator: synced/saving/error
-  - Exit confirmation modal if unsaved changes
+  - Traffic light indicator: green (synced) / yellow (saving) / red (error) — `w-2 h-2 rounded-full` + pulse animation
+  - Checkpoint timer: `font-mono text-[10px] text-stone-400` countdown to next remote save
+  - Exit confirmation modal if unsaved changes (close button triggers warning)
   - `updatePost` and `deletePost` server actions
   - Publish action: atomic swap shadow → live
-- **Acceptance:** Can edit post with auto-save. Shadow draft doesn't affect live. Publish swaps atomically. Checkpoint recovers after crash.
+- **Acceptance:** Edit page reuses same editorial editor layout. Auto-save with traffic light. Shadow draft doesn't affect live. Publish swaps atomically.
 - **Commit:** `feat: add edit page with shadow drafts, auto-save, and crash recovery`
 
 ---

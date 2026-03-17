@@ -12,6 +12,7 @@ CodeShelf — a developer publishing platform with bookshelf metaphor. Next.js 1
 - **How it's structured:** `docs/SPEC.md` (tech stack, routes, page layouts, architecture decisions)
 - **Data blueprint:** `docs/SCHEMA.md` (tables, RLS policies, triggers)
 - **Design system:** `docs/DESIGN_TOKENS.md` (CSS variables, Tailwind config, font loading, component usage)
+- **Design alignment:** `docs/DESIGN_ALIGNMENT.md` (gap analysis vs codeshelf-nextjs, target patterns for each page)
 - **Current progress:** `docs/EXECUTION_PLAN.md` (task list with status checkboxes)
 - **Audit reference:** `docs/DESIGN_AUDIT.md` (findings from codeshelf-nextjs codebase audit)
 - **Canonical SQL:** `supabase/migrations/*`
