@@ -18,14 +18,8 @@ export const metadata: Metadata = {
 }
 
 function getFirstValue(value: string | string[] | undefined) {
-  if (typeof value === 'string') {
-    return value
-  }
-
-  if (Array.isArray(value)) {
-    return value[0]
-  }
-
+  if (typeof value === 'string') return value
+  if (Array.isArray(value)) return value[0]
   return undefined
 }
 
@@ -38,12 +32,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   const page = Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1
 
   const [archive, categories, tags] = await Promise.all([
-    getArchivePosts({
-      category,
-      tag,
-      sort,
-      page,
-    }),
+    getArchivePosts({ category, tag, sort, page }),
     getAllCategories(),
     getAllTags(),
   ])
@@ -52,32 +41,25 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
 
   return (
     <main className='mx-auto max-w-layout px-6 py-12 md:px-12'>
-      <div className='space-y-8'>
-        <header className='space-y-3'>
-          <p className='text-meta-base font-medium uppercase tracking-label text-muted-foreground'>
-            Public archive
-          </p>
-          <h1 className='font-serif text-4xl font-bold text-foreground'>Archive</h1>
-        </header>
+      <div className='gap-12 laptop:flex laptop:items-start'>
+        {/* Sidebar: fixed width, sticky */}
+        <div className='mb-10 laptop:mb-0 laptop:w-[300px] laptop:shrink-0 laptop:sticky laptop:top-24'>
+          <ArchiveSidebar
+            activeCategory={category}
+            activeSort={sort}
+            activeTag={tag}
+            categories={categories}
+            tags={tags}
+          />
+        </div>
 
-        <div className='space-y-8 laptop:flex laptop:items-start laptop:gap-8 laptop:space-y-0'>
-          <div className='laptop:w-72 laptop:shrink-0'>
-            <ArchiveSidebar
-              activeCategory={category}
-              activeSort={sort}
-              activeTag={tag}
-              categories={categories}
-              tags={tags}
-            />
-          </div>
-
-          <div className='flex-1'>
-            <ArchivePostList
-              currentPage={currentPage}
-              posts={archive.posts}
-              totalPages={archive.totalPages}
-            />
-          </div>
+        {/* Post list */}
+        <div className='min-w-0 flex-1'>
+          <ArchivePostList
+            currentPage={currentPage}
+            posts={archive.posts}
+            totalPages={archive.totalPages}
+          />
         </div>
       </div>
     </main>

@@ -113,6 +113,48 @@
     }
   }
 
+}
+
+@layer components {
+  .prose h2 {
+    @apply font-serif italic font-light;
+  }
+  .prose h3 {
+    @apply font-serif font-medium;
+  }
+  .prose p {
+    @apply font-light;
+  }
+  .prose a {
+    @apply text-blue-600 no-underline hover:underline dark:text-blue-400;
+    text-decoration: none;
+  }
+  .prose blockquote {
+    @apply border-l-2 border-stone-300 dark:border-stone-600 pl-4 italic font-light;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
   .hljs {
     @apply block bg-card text-foreground;
   }

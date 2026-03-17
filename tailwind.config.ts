@@ -94,6 +94,11 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        book: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 2px 0 4px -1px rgb(0 0 0 / 0.05)",
+        "book-hover": "0 10px 15px -3px rgb(0 0 0 / 0.15), 0 4px 6px -4px rgb(0 0 0 / 0.1), 4px 0 8px -2px rgb(0 0 0 / 0.08)",
+        "book-active": "0 1px 2px 0 rgb(0 0 0 / 0.05), 1px 0 2px -1px rgb(0 0 0 / 0.03)",
+      },
       animation: {
         float: "float 4s ease-in-out infinite",
       },

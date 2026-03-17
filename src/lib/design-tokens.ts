@@ -8,20 +8,29 @@ function getCharacterWidth(character: string) {
   return hasKorean(character) ? 16 : 9
 }
 
+const BAR_HEIGHT_STEPS = [
+  { max: 70, class: 'h-14' },
+  { max: 85, class: 'h-16' },
+  { max: 100, class: 'h-20' },
+  { max: 120, class: 'h-24' },
+  { max: Infinity, class: 'h-28' },
+] as const
+
 export function generateBookDimensions(
   postCount: number,
   title: string
-): { height: number; width: number } {
+): { height: number; width: string } {
   const normalizedTitle = title.trim()
   const height = Math.min(280, Math.max(140, 140 + postCount * 20))
   const rawWidth = normalizedTitle
     ? Array.from(normalizedTitle).reduce((total, character) => total + getCharacterWidth(character), 0)
     : 60
-  const width = Math.min(140, Math.max(60, rawWidth))
+  const clampedWidth = Math.min(140, Math.max(60, rawWidth))
+  const widthClass = BAR_HEIGHT_STEPS.find((step) => clampedWidth <= step.max)?.class ?? 'h-28'
 
   return {
     height,
-    width,
+    width: widthClass,
   }
 }
 
